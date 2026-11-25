@@ -289,6 +289,9 @@ const USER_SETTINGS_FIELDS = {
 	backgroundEditEnabled: { default: false as boolean },
 	optOutOfRemoteConfig: { default: false as boolean },
 	showFeatureTips: { default: false as boolean },
+	energyEstimateCsvPath: { default: "" as string },
+	energyEstimateGridGPerKwh: { default: 0 as number },
+	energyEstimateEnergyOnly: { default: false as boolean },
 
 	// OpenTelemetry configuration
 	openTelemetryEnabled: { default: true as boolean },

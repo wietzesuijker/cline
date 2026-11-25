@@ -11,6 +11,7 @@ import { ClineFeatureSetting } from "./ClineFeatureSetting"
 import { BannerCardData } from "./cline/banner"
 import { ClineRulesToggles } from "./cline-rules"
 import type { CloudTaskTargetView, CurrentCloudTaskInfo } from "./cloud/cloud-sessions"
+import type { EnergyRow } from "./energyEstimate"
 import { HistoryItem } from "./HistoryItem"
 import { McpDisplayMode } from "./McpDisplayMode"
 import { ClineMessageModelInfo } from "./messages"
@@ -143,6 +144,11 @@ export interface ExtensionState {
 	optOutOfRemoteConfig?: boolean
 	remoteConfigAvailable?: boolean
 	showFeatureTips?: boolean
+	/** CLEER Agentic/Typical rows for the opt-in energy estimate; absent unless a CSV path is set and readable. */
+	energyEstimateRows?: EnergyRow[]
+	energyEstimateCsvPath?: string
+	energyEstimateGridGPerKwh?: number
+	energyEstimateEnergyOnly?: boolean
 	banners?: BannerCardData[]
 	welcomeBanners?: BannerCardData[]
 	/** Cline Cloud sessions rollout flag; shows the Settings toggle. */

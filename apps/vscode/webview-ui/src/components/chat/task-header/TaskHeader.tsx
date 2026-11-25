@@ -1,4 +1,5 @@
 import { ClineMessage } from "@shared/ExtensionMessage"
+import { estimateEnergy, formatEnergy } from "@shared/energyEstimate"
 import { ChevronDownIcon, ChevronRightIcon } from "lucide-react"
 import React, { useCallback, useLayoutEffect, useMemo, useState } from "react"
 import { CloudTaskBadge } from "@/components/cloud/CloudTaskBadge"
@@ -75,6 +76,9 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 		workspaceRoots,
 		platform,
 		currentCloudTask,
+		energyEstimateRows,
+		energyEstimateGridGPerKwh,
+		energyEstimateEnergyOnly,
 	} = useExtensionState()
 
 	const [isHighlightedTextExpanded, setIsHighlightedTextExpanded] = useState(false)
@@ -109,7 +113,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 	}, [isHighlightedTextExpanded])
 
 	// Simplified computed values
-	const { selectedModelInfo } = useNormalizedApiConfiguration(mode)
+	const { selectedModelId, selectedModelInfo } = useNormalizedApiConfiguration(mode)
 	const modeFields = getModeSpecificFields(apiConfiguration, mode)
 
 	// Local providers report no cost; the openai-compatible provider can
@@ -137,6 +141,14 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 				modeFields.apiProvider !== "lmstudio" &&
 				usageCostDisplay === "show"),
 	})
+
+	// Opt-in CLEER estimate (Settings > Features); unset or unmatched models leave the header unchanged.
+	const energyLabel = useMemo(() => {
+		const estimate = energyEstimateRows && estimateEnergy(energyEstimateRows, selectedModelId, totalCost)
+		return estimate
+			? formatEnergy(estimate, { gridGPerKwh: energyEstimateGridGPerKwh, energyOnly: energyEstimateEnergyOnly })
+			: undefined
+	}, [energyEstimateRows, selectedModelId, totalCost, energyEstimateGridGPerKwh, energyEstimateEnergyOnly])
 
 	// Event handlers
 	const toggleTaskExpanded = useCallback(() => setIsTaskExpanded(!isTaskExpanded), [setIsTaskExpanded, isTaskExpanded])
@@ -211,6 +223,13 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 									className="mx-1 px-1 py-0.25 rounded-full inline-flex shrink-0 text-badge-background bg-badge-foreground/80 items-center"
 									id="price-tag">
 									<span className="text-xs sm:text-sm">${totalCost?.toFixed(4)}</span>
+								</div>
+							)}
+							{isCostAvailable && energyLabel && (
+								<div
+									className="mx-1 px-1 py-0.25 rounded-full inline-flex shrink-0 text-badge-background bg-badge-foreground/80 items-center"
+									id="energy-tag">
+									<span className="text-xs sm:text-sm">{energyLabel}</span>
 								</div>
 							)}
 						</div>

@@ -14,6 +14,7 @@ import { featureFlagsService } from "@/services/feature-flags"
 import { getDistinctId } from "@/services/logging/distinctId"
 import { getExtensionVariant } from "@/services/telemetry/rollout-metadata"
 import { getLatestAnnouncementId } from "@/utils/announcements"
+import { loadEnergyRows } from "./loadEnergyRows"
 
 /**
  * Builds the ExtensionState object to push to the webview.
@@ -71,6 +72,7 @@ export async function getStateToPostToWebview(controller: {
 	const lastDismissedCliBannerVersion = stateManager.getGlobalStateKey("lastDismissedCliBannerVersion") || 0
 	const dismissedBanners = stateManager.getGlobalStateKey("dismissedBanners")
 	const showFeatureTips = stateManager.getGlobalSettingsKey("showFeatureTips")
+	const energyEstimateCsvPath = stateManager.getGlobalSettingsKey("energyEstimateCsvPath")
 
 	const localClineRulesToggles = stateManager.getWorkspaceStateKey("localClineRulesToggles")
 	const localWindsurfRulesToggles = stateManager.getWorkspaceStateKey("localWindsurfRulesToggles")
@@ -181,6 +183,10 @@ export async function getStateToPostToWebview(controller: {
 		optOutOfRemoteConfig: stateManager.getGlobalSettingsKey("optOutOfRemoteConfig"),
 		remoteConfigAvailable: controller.isRemoteConfigAvailable ?? false,
 		showFeatureTips,
+		energyEstimateCsvPath,
+		energyEstimateRows: loadEnergyRows(energyEstimateCsvPath),
+		energyEstimateGridGPerKwh: stateManager.getGlobalSettingsKey("energyEstimateGridGPerKwh"),
+		energyEstimateEnergyOnly: stateManager.getGlobalSettingsKey("energyEstimateEnergyOnly"),
 		banners,
 		welcomeBanners,
 		openAiCodexIsAuthenticated,

@@ -289,6 +289,9 @@ message Settings {
   optional OpenRouterModelInfo act_mode_cline_pass_model_info = 186;
   optional bool cloud_sessions_enabled = 188;
   optional string open_telemetry_traces_exporter = 189;
+  optional string energy_estimate_csv_path = 190;
+  optional int32 energy_estimate_grid_g_per_kwh = 191;
+  optional bool energy_estimate_energy_only = 192;
 }
 
 message State {
@@ -435,6 +438,9 @@ message UpdateSettingsRequest {
   optional string compaction_strategy = 44;
   optional bool web_search_enabled = 45;
   optional bool cloud_sessions_enabled = 46;
+  optional string energy_estimate_csv_path = 47;
+  optional int32 energy_estimate_grid_g_per_kwh = 48;
+  optional bool energy_estimate_energy_only = 49;
 }
 
 message UpdateTerminalConnectionTimeoutRequest {

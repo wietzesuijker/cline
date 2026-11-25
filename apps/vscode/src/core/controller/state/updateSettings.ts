@@ -268,6 +268,16 @@ export async function updateSettings(controller: Controller, request: UpdateSett
 			controller.stateManager.setGlobalState("showFeatureTips", request.showFeatureTips)
 		}
 
+		if (request.energyEstimateCsvPath !== undefined) {
+			controller.stateManager.setGlobalState("energyEstimateCsvPath", request.energyEstimateCsvPath.trim())
+		}
+		if (request.energyEstimateGridGPerKwh !== undefined) {
+			controller.stateManager.setGlobalState("energyEstimateGridGPerKwh", Math.max(0, request.energyEstimateGridGPerKwh))
+		}
+		if (request.energyEstimateEnergyOnly !== undefined) {
+			controller.stateManager.setGlobalState("energyEstimateEnergyOnly", request.energyEstimateEnergyOnly)
+		}
+
 		// Post updated state to webview
 		await controller.postStateToWebview()
 

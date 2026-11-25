@@ -5,6 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { useExtensionState } from "@/context/ExtensionStateContext"
+import { DebouncedTextField } from "../common/DebouncedTextField"
 import Section from "../Section"
 import { featureSettingControlId, featureSettingElementId } from "../settingsTargets"
 import { updateSetting } from "../utils/settingsHandlers"
@@ -156,6 +157,9 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 		showFeatureTips,
 		cloudSessionsAvailable,
 		cloudSessionsEnabled,
+		energyEstimateCsvPath,
+		energyEstimateGridGPerKwh,
+		energyEstimateEnergyOnly,
 	} = useExtensionState()
 
 	// State lookup for mapped features
@@ -247,6 +251,40 @@ const FeatureSettingsSection = ({ renderSectionHeader }: FeatureSettingsSectionP
 								/>
 							))}
 						</div>
+					</div>
+				</div>
+
+				{/* Energy estimate */}
+				<div>
+					<div className="text-xs font-medium text-foreground/80 uppercase tracking-wider mb-3">Energy Estimate</div>
+					<div
+						className="relative p-3 my-3 rounded-md border border-editor-widget-border/50 space-y-3"
+						id="energy-estimate">
+						<p className="text-xs text-muted-foreground">
+							Shows an energy and carbon estimate next to the task cost, from your own copy of the CLEER dashboard
+							CSV (CC BY-NC 4.0). Leave the path empty to turn it off.
+						</p>
+						<DebouncedTextField
+							initialValue={energyEstimateCsvPath ?? ""}
+							onChange={(value) => updateSetting("energyEstimateCsvPath", value)}
+							placeholder="/path/to/cleer-dashboard-data.csv"
+							style={{ width: "100%" }}>
+							<span className="font-medium">CLEER CSV path</span>
+						</DebouncedTextField>
+						<DebouncedTextField
+							initialValue={energyEstimateGridGPerKwh ? String(energyEstimateGridGPerKwh) : ""}
+							onChange={(value) => updateSetting("energyEstimateGridGPerKwh", Number.parseInt(value, 10) || 0)}
+							placeholder="CLEER default"
+							style={{ width: "100%" }}>
+							<span className="font-medium">Grid intensity (gCO₂e/kWh)</span>
+						</DebouncedTextField>
+						<FeatureRow
+							checked={energyEstimateEnergyOnly}
+							description="Hide the carbon estimate."
+							id="energy-estimate-energy-only"
+							label="Energy only"
+							onChange={(checked) => updateSetting("energyEstimateEnergyOnly", checked)}
+						/>
 					</div>
 				</div>
 
